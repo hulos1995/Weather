@@ -1,0 +1,42 @@
+.home {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+
+  &__title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  &__weather {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  &__weather-info {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    width: 200px;
+  }
+
+  &__weather-country {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  &__weather-temp {
+    font-size: 18px;
+  }
+
+  &__weather-description {
+    font-size: 16px;
+    color: gray;
+  }
+
+  &__loading {
+    font-size: 18px;
+    color: red;
+  }
+}
