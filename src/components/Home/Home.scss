@@ -7,6 +7,22 @@
     font-weight: bold;
   }
 
+  &__select {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    appearance: none;
+    background-color: #f8f8f8;
+    cursor: pointer;
+
+    &:focus {
+      border-color: #888;
+    }
+  }
+
   &__weather {
     margin-top: 20px;
     display: flex;
@@ -33,10 +49,5 @@
   &__weather-description {
     font-size: 16px;
     color: gray;
-  }
-
-  &__loading {
-    font-size: 18px;
-    color: red;
   }
 }

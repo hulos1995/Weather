@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Home.scss';
+
 interface WeatherData {
   main: {
     temp: number;
@@ -17,6 +18,7 @@ interface WeatherData {
   }[];
   name: string;
 }
+
 interface Country {
   name: string;
   lat: number;
@@ -29,49 +31,57 @@ const countries: Country[] = [
 ];
 
 const Home: React.FC = () => {
-  const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const base_URL = import.meta.env.VITE_API_URL;
   const key = import.meta.env.VITE_API_KEY;
 
   useEffect(() => {
     const fetchWeather = async () => {
-      try {
-        const response = await Promise.all(
-          countries.map((country) =>
-            axios.get(
-              `${base_URL}?lat=${country.lat}&lon=${country.lon}&appid=${key}`
-            )
-          )
-        );
+      if (selectedCountry) {
+        try {
+          const response = await axios.get(
+            `${base_URL}?lat=${selectedCountry.lat}&lon=${selectedCountry.lon}&appid=${key}`
+          );
 
-        const weatherDataArray = response.map((res) => res.data);
-        setWeatherData(weatherDataArray);
-      } catch (error) {
-        console.error('Error fetching weather data:', error);
+          setWeatherData(response.data);
+        } catch (error) {
+          console.error('Error fetching weather data:', error);
+        }
       }
     };
 
     fetchWeather();
-  }, [base_URL, key]);
+  }, [selectedCountry, base_URL, key]);
+
+  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const countryName = event.target.value;
+    const country = countries.find((c) => c.name === countryName) || null;
+    setSelectedCountry(country);
+  };
 
   return (
     <div className='home'>
       <h2 className='home__title'>Weather Data</h2>
+      <select onChange={handleCountryChange} className='home__select'>
+        <option value=''>Please Choose a country</option>
+        {countries.map((country) => (
+          <option key={country.name} value={country.name}>
+            {country.name}
+          </option>
+        ))}
+      </select>
       <div className='home__weather'>
-        {weatherData.length > 0 ? (
-          weatherData.map((data, index) => (
-            <div key={index} className='home__weather-info'>
-              <h3 className='home__weather-country'>{data.name}</h3>
-              <p className='home__weather-temp'>
-                Temperature: {data.main.temp}°C
-              </p>
-              <p className='home__weather-description'>
-                Description: {data.weather[0].description}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p className='home__loading'>Loading...</p>
+        {weatherData && (
+          <div className='home__weather-info'>
+            <h3 className='home__weather-country'>{weatherData.name}</h3>
+            <p className='home__weather-temp'>
+              Temperature: {weatherData.main.temp}°C
+            </p>
+            <p className='home__weather-description'>
+              Description: {weatherData.weather[0].description}
+            </p>
+          </div>
         )}
       </div>
     </div>
