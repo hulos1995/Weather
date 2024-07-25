@@ -17,6 +17,7 @@ interface WeatherData {
     main: string;
   }[];
   name: string;
+  country: string;
 }
 
 interface Country {
@@ -26,8 +27,11 @@ interface Country {
 }
 
 const countries: Country[] = [
-  { name: 'Country1', lat: 44.34, lon: 10.99 },
-  { name: 'Country2', lat: 48.85, lon: 2.35 },
+  { name: 'Italy', lat: 44.34, lon: 10.99 },
+  { name: 'France', lat: 48.85, lon: 2.35 },
+  { name: 'Vietnam', lat: 14.058324, lon: 108.277199 },
+  { name: 'Canada', lat: 56.130367, lon: -106.346771 },
+  { name: 'UK', lat: 55.378052, lon: -3.435973 },
 ];
 
 const Home: React.FC = () => {
@@ -44,7 +48,10 @@ const Home: React.FC = () => {
             `${base_URL}?lat=${selectedCountry.lat}&lon=${selectedCountry.lon}&appid=${key}`
           );
 
-          setWeatherData(response.data);
+          setWeatherData({
+            ...response.data,
+            country: selectedCountry.name,
+          });
         } catch (error) {
           console.error('Error fetching weather data:', error);
         }
@@ -58,6 +65,9 @@ const Home: React.FC = () => {
     const countryName = event.target.value;
     const country = countries.find((c) => c.name === countryName) || null;
     setSelectedCountry(country);
+    if (!countryName) {
+      setWeatherData(null);
+    }
   };
 
   return (
@@ -74,7 +84,7 @@ const Home: React.FC = () => {
       <div className='home__weather'>
         {weatherData && (
           <div className='home__weather-info'>
-            <h3 className='home__weather-country'>{weatherData.name}</h3>
+            <h3 className='home__weather-country'>{weatherData.country}</h3>
             <p className='home__weather-temp'>
               Temperature: {weatherData.main.temp}°C
             </p>
