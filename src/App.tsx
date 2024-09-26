@@ -1,7 +1,14 @@
-import './App.css';
+import React from 'react';
+import Home from './components/Home/Home';
 
-function App() {
-  return <></>;
-}
+const App: React.FC = () => {
+  return (
+    <>
+      <div>
+        <Home />
+      </div>
+    </>
+  );
+};
 
 export default App;
